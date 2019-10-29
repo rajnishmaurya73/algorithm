@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#include<list>
+using namespace std;
+// taking graph
+int arr[5][5]={{0,10,0,5,0},{0,0,1,2,0},{0,0,0,0,4},{0,3,9,0,2},{7,0,6,0,0}};
+list<int> r;
+int time=0;
+void dfs(int i,int stime[],int ftime[],int parent[],int color[]);
+int main()
+{
+    int v;
+    cout<<"enter number of vertices\n";
+    cin>>v;
+    int stime[v],ftime[v],parent[v],color[v];
+    int i,j;
+    int key[v];
+    // taking three arrays color ,parent,key
+    for(i=0;i<v;i++)
+    {
+        key[i]=INT_MAX;
+    }
+    // key denotes shortest path from source vertex
+    key[0]=0;
+    //  denoting color to denote status of anode
+    for(i=0;i<v;i++)
+    {
+        color[i]=0;
+        parent[i]=-1;
+    }
+    // parent denotes the parent of a node
+    for(i=0;i<v;i++)
+    {
+        if(color[i]==0)
+        {
+                 dfs(i,stime,ftime,parent,color);
+        }
+
+    }
+
+    list<int>::iterator it;
+    for(it=r.begin();it!=r.end();it++)
+    {
+        for(i=0;i<v;i++)
+        {
+            if(arr[*it][i]!=0)
+            {
+                if(key[i]>key[*it]+arr[*it][i])
+                {
+                    key[i]=key[*it]+arr[*it][i];
+                }
+            }
+        }
+    }
+    // printing shortest path
+    for(i=1;i<v;i++)
+    {
+        cout<<key[i]<<endl;
+    }
+}
+// implementing depth first search
+void dfs(int i,int stime[],int ftime[],int parent[],int color[])
+{
+    time++;
+    color[i]=1;
+    stime[i]=time;
+    int j;
+    for(j=0;j<5;j++)
+    {
+        if(arr[i][j]!=0 && color[j]==0)
+        {
+            dfs(j,stime,ftime,parent,color);
+        }
+    }
+     time++;
+    ftime[i]=time;
+    color[i]=2;
+    r.push_front(i);
+}
